@@ -1,0 +1,10 @@
+Quick Query Editor - Q²
+
+Commandline options:
+  {executable} /?
+  {executable} "Session" sessionfilename
+  {executable} "MSSql" {connectionstring | dbinstance database [uid pwd]}
+  {executable} "Oracle" {connectstring | database uid pwd}
+
+
+{copyright}
