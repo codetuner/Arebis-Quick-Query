@@ -203,6 +203,7 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 		{
 			DataTable result = new DataTable();
 			OracleDataAdapter da = new OracleDataAdapter(String.Format("SELECT * FROM ({0}) WHERE ROWNUM <= 500", query), this.connection);
+			da.ReturnProviderSpecificTypes = true;
 
 			da.Fill(result);
 
