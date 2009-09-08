@@ -15,25 +15,19 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_02B97868142EE3D539C3870BDB6D89A8"
+        "MsmKey" = "8:_911028E27F0A0B1616CDFC52A626721D"
+        "OwnerKey" = "8:_E0473A626BB7A44896DECF4068560853"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_911028E27F0A0B1616CDFC52A626721D"
         "OwnerKey" = "8:_F254E88F21A3414181BAC6B0B276E838"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_60F9F80663C803CF3B5E216636BD7162"
-        "OwnerKey" = "8:_C3812E46D5BDFFA42A3C0F5FD520EAE4"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_60F9F80663C803CF3B5E216636BD7162"
-        "OwnerKey" = "8:_F254E88F21A3414181BAC6B0B276E838"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C3812E46D5BDFFA42A3C0F5FD520EAE4"
+        "MsmKey" = "8:_E0473A626BB7A44896DECF4068560853"
         "OwnerKey" = "8:_F254E88F21A3414181BAC6B0B276E838"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -46,25 +40,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_60F9F80663C803CF3B5E216636BD7162"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_F254E88F21A3414181BAC6B0B276E838"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_02B97868142EE3D539C3870BDB6D89A8"
+        "OwnerKey" = "8:_E0473A626BB7A44896DECF4068560853"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C3812E46D5BDFFA42A3C0F5FD520EAE4"
+        "OwnerKey" = "8:_911028E27F0A0B1616CDFC52A626721D"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -172,45 +160,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_02B97868142EE3D539C3870BDB6D89A8"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Oracle.DataAccess, Version=2.111.6.20, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=x86"
-                "ScatterAssemblies"
-                {
-                    "_02B97868142EE3D539C3870BDB6D89A8"
-                    {
-                    "Name" = "8:Oracle.DataAccess.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Oracle.DataAccess.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_DC5F0C76E3C14CD5BDEE8313516E71F6"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_60F9F80663C803CF3B5E216636BD7162"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_911028E27F0A0B1616CDFC52A626721D"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Microsoft.Data.ConnectionUI, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_60F9F80663C803CF3B5E216636BD7162"
+                    "_911028E27F0A0B1616CDFC52A626721D"
                     {
                     "Name" = "8:Microsoft.Data.ConnectionUI.dll"
                     "Attributes" = "3:512"
@@ -234,14 +191,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C3812E46D5BDFFA42A3C0F5FD520EAE4"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E0473A626BB7A44896DECF4068560853"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Microsoft.Data.ConnectionUI.Dialog, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_C3812E46D5BDFFA42A3C0F5FD520EAE4"
+                    "_E0473A626BB7A44896DECF4068560853"
                     {
                     "Name" = "8:Microsoft.Data.ConnectionUI.Dialog.dll"
                     "Attributes" = "3:512"
@@ -354,15 +311,15 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Quick Query Editor"
-        "ProductCode" = "8:{A9E522B1-A8A6-493D-8F1A-AFCEC976206D}"
-        "PackageCode" = "8:{9DD5BFD5-08E5-4381-972B-5C7AAC0FCC95}"
+        "ProductName" = "8:Arebis Quick Query Editor"
+        "ProductCode" = "8:{025FBC2D-CE3B-4CCD-9166-7C5750F7D476}"
+        "PackageCode" = "8:{7D66BBDE-39CD-4B3F-98F6-13DAA5205759}"
         "UpgradeCode" = "8:{3FE05B59-E21C-46F6-ACD7-90F4B4E21152}"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.2.0"
         "Manufacturer" = "8:Arebis"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://q2.codeplex.com/"
@@ -918,7 +875,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F254E88F21A3414181BAC6B0B276E838"
             {
-            "SourcePath" = "8:..\\Aplication\\obj\\Debug\\Arebis.QuickQueryBuilder.exe"
+            "SourcePath" = "8:..\\Aplication\\obj\\Release\\Q2.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_DC5F0C76E3C14CD5BDEE8313516E71F6"
