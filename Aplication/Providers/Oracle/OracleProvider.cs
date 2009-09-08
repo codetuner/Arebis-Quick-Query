@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using Oracle.DataAccess.Client;
 using System.Collections;
 using System.Data;
+using System.Data.OracleClient;
 using System.Runtime.Serialization;
 
 namespace Arebis.QuickQueryBuilder.Providers.Oracle
 {
 	[Serializable]
-	public class OracleProvider : IDatabaseProvider, IDeserializationCallback
+	public class OracleProvider : IDatabaseProvider
 	{
 		private static readonly Regex ColumnArrayParser = new Regex(@"^(.+?)(_)(\d+)$");
 
@@ -24,8 +24,6 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 		public OracleProvider(string connectionString)
 		{
             this.connectionString = connectionString;
-			this.connection = new OracleConnection(connectionString);
-			this.connection.Open();
 		}
 
 		#region IDatabaseProvider Members
@@ -37,7 +35,7 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 
 		public string ConnectionString
 		{
-			get { return this.connection.ConnectionString; }
+			get { return this.connectionString; }
 		}
 
 		public string ConnectionName
@@ -53,6 +51,12 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 						return null;
 				}
 			}
+		}
+
+		public void Open()
+		{
+			this.connection = new OracleConnection(connectionString);
+			this.connection.Open();
 		}
 
 		public IList<DbSchema> GetSchemas()
@@ -211,16 +215,6 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 		}
 
 		#endregion
-
-        #region IDeserializationCallback Members
-
-        void IDeserializationCallback.OnDeserialization(object sender)
-        {
-            this.connection = new OracleConnection(this.connectionString);
-            this.connection.Open();
-        }
-
-        #endregion
 
 		#region IDisposable Members
 

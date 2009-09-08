@@ -5,7 +5,6 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Oracle.DataAccess.Client;
 using Arebis.QuickQueryBuilder.Model;
 using Arebis.QuickQueryBuilder.Providers;
 using Arebis.QuickQueryBuilder.Providers.Oracle;
@@ -266,6 +265,23 @@ namespace Arebis.QuickQueryBuilder
 			this.changed = true;
 		}
 
+		private void TablesList_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (e.KeyChar == 13)
+				this.TablesList_DoubleClick(this, e);
+		}
+
+		private void ColumnList_KeyPress(object sender, KeyPressEventArgs e)
+		{
+			if (e.KeyChar == 13)
+				this.ColumnList_DoubleClick(this, e);
+		}
+
+		private void QueryTree_Changed(object sender, EventArgs e)
+		{
+			this.changed = true;
+		}
+
 		#endregion
 
 		#region Menu handlers
@@ -276,6 +292,7 @@ namespace Arebis.QuickQueryBuilder
             if (this.CloseSession(true))
             {
                 this.provider = DatabaseConnectionDialog.Show(this);
+
                 NewSession();
             }
         }
@@ -312,7 +329,31 @@ namespace Arebis.QuickQueryBuilder
             }
         }
 
-        private void newWindowToolStripMenuItem_Click(object sender, EventArgs e)
+		private void editConnectionToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (this.provider != null)
+			{
+				IDatabaseProvider provider = DatabaseConnectionDialog.Show(this, this.provider.Identifier, this.provider.ConnectionString);
+				if (provider != null)
+				{
+					provider.Open();
+					this.provider = provider;
+
+					// Reset list connections:
+					this.SchemasList.Items.Clear();
+					this.TablesList.Items.Clear();
+					foreach (DbSchema item in this.provider.GetSchemas())
+					{
+						ListViewItem lvi = SchemasList.Items.Add(item.ToString(), 1);
+						lvi.Tag = item;
+						lvi.Group = SchemasList.Groups["Schemas"];
+					}
+					this.SchemasList.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+				}
+			}
+		}
+		
+		private void newWindowToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (this.provider == null)
                 Process.Start(Environment.GetCommandLineArgs()[0]);
@@ -369,6 +410,7 @@ namespace Arebis.QuickQueryBuilder
 				{
 					ColumnElement c = (ColumnElement)item;
 					c.Condition = null;
+					c.Visible = true;
 				}
 			}
 		}
@@ -394,7 +436,9 @@ namespace Arebis.QuickQueryBuilder
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append("Q² - Quick Query Editor\r\n\r\nWrite complex queries in a few clicks!\r\n\r\n");
+            sb.Append("Q² - Quick Query Editor\r\nVersion: ");
+            sb.Append(((AssemblyFileVersionAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyFileVersionAttribute), true)[0]).Version);
+            sb.Append("\r\n\r\nWrite complex queries in a few clicks!\r\n\r\n");
             sb.Append(((AssemblyCopyrightAttribute)Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false)[0]).Copyright);
 
             MessageBox.Show(this, sb.ToString(), this.formTitle, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -470,7 +514,7 @@ namespace Arebis.QuickQueryBuilder
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show(ex.ToString());
+				MessageBox.Show(this, ex.Message, this.formTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
 		}
 
@@ -480,7 +524,7 @@ namespace Arebis.QuickQueryBuilder
 
 		private bool CloseSession(bool interactive)
 		{
-			if ((interactive) && ((this.changed) || (this.QueryTree.Changed)))
+			if ((interactive) && (this.changed))
 			{
 				DialogResult saveFirst = MessageBox.Show(this, "Save the existing session first ?", this.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 				if (saveFirst == DialogResult.Yes)
@@ -511,7 +555,6 @@ namespace Arebis.QuickQueryBuilder
 				this.provider.Dispose();
 			this.provider = null;
 
-			this.QueryTree.Changed = false;
 			this.changed = false;
 
             // Update windowstate:
@@ -523,6 +566,8 @@ namespace Arebis.QuickQueryBuilder
 
 		private void NewSession()
 		{
+			this.TryOpenConnection();
+
 			if (this.provider != null)
 			{
 				using (new WaitCursor(this))
@@ -542,7 +587,6 @@ namespace Arebis.QuickQueryBuilder
 				}
 			}
 
-			this.QueryTree.Changed = false;
 			this.changed = false;
 
             this.UpdateWindowState();
@@ -550,12 +594,20 @@ namespace Arebis.QuickQueryBuilder
 
 		private void OpenSession()
 		{
+			Session session;
 			BinaryFormatter formatter = new BinaryFormatter();
-			FileStream str = new FileStream(this.sessionFileName, FileMode.Open, FileAccess.Read);
-			Session session = (Session)formatter.Deserialize(str);
-			str.Close();
+			using (FileStream str = new FileStream(this.sessionFileName, FileMode.Open, FileAccess.Read))
+			{
+				session = (Session)formatter.Deserialize(str);
+				str.Close();
+			}
 
 			this.provider = session.DatabaseProvider;
+
+			this.TryOpenConnection();
+
+			if (this.provider == null)
+				return;
 
 			using (new WaitCursor(this))
 			{
@@ -577,7 +629,6 @@ namespace Arebis.QuickQueryBuilder
 				this.WhereText.Text = session.WhereText;
 			}
 
-			this.QueryTree.Changed = false;
 			this.changed = false;
 
             this.UpdateWindowState();
@@ -597,7 +648,6 @@ namespace Arebis.QuickQueryBuilder
 				str.Close();
 			}
 
-			this.QueryTree.Changed = false;
 			this.changed = false;
 
             this.UpdateWindowState();
@@ -629,6 +679,7 @@ namespace Arebis.QuickQueryBuilder
             bool sessionActive = (this.document != null);
             this.saveSessionToolStripMenuItem.Enabled = sessionActive;
             this.saveSessionAsToolStripMenuItem.Enabled = sessionActive;
+			this.editConnectionToolStripMenuItem.Enabled = (this.provider != null);
             this.copyQueryToClipboardToolStripMenuItem.Enabled = sessionActive;
             this.BuildQueryMenuItem.Enabled = sessionActive;
             this.fixGroupingToolStripMenuItem.Enabled = sessionActive;
@@ -636,6 +687,24 @@ namespace Arebis.QuickQueryBuilder
             this.clearAllConditionsToolStripMenuItem.Enabled = sessionActive;
             this.clearAllAliassesToolStripMenuItem.Enabled = sessionActive;
         }
+
+		private void TryOpenConnection()
+		{
+			bool succeeded = false;
+			while ((this.provider != null) && (!succeeded))
+			{
+				try
+				{
+					this.provider.Open();
+					succeeded = true;
+				}
+				catch (Exception ex)
+				{
+					MessageBox.Show(this, "Failed to open connection: " + ex.Message, this.formTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+					this.provider = DatabaseConnectionDialog.Show(this, this.provider.Identifier, this.provider.ConnectionString);
+				}
+			}
+		}
 
 		#endregion
 

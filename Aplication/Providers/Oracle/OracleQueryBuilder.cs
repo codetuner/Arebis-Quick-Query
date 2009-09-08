@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Arebis.QuickQueryBuilder.Model;
+using System.Text.RegularExpressions;
 
 namespace Arebis.QuickQueryBuilder.Providers.Oracle
 {
 	public class OracleQueryBuilder : IQueryBuilder
 	{
+		private static Regex columnNumberParser = new Regex("[0-9]+$");
+
 		private StringBuilder select = new StringBuilder();
 		private StringBuilder from = new StringBuilder();
 		private StringBuilder where = new StringBuilder();
@@ -94,36 +97,7 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 		public void BeginColumn(ColumnElement column)
 		{
 			// Determine grouping function:
-			string function;
-			switch (column.Grouping)
-			{ 
-				case GroupingFunction.None:
-					function = null;
-					break;
-				case GroupingFunction.Group:
-					function = null;
-					break;
-				case GroupingFunction.AnyValue:
-					function = "MIN";
-					break;
-				case GroupingFunction.Count:
-					function = "COUNT";
-					break;
-				case GroupingFunction.Sum:
-					function = "SUM";
-					break;
-				case GroupingFunction.Average:
-					function = "AVG";
-					break;
-				case GroupingFunction.Min:
-					function = "MIN";
-					break;
-				case GroupingFunction.Max:
-					function = "MAX";
-					break;
-				default:
-					throw new NotSupportedException(String.Format("Grouping operation {0} not supported.", column.Grouping));
-			}
+			string function = this.GetFunction(column.Grouping);
 
 			// Apply select:
 			if (column.Visible)
@@ -138,7 +112,7 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 			{
 				if (this.where.Length > 0)
 					this.where.Append("\r\n   AND ");
-				this.where.AppendFormat("({0}{1})", GetFullName(column), column.Condition);
+				this.where.AppendFormat("({0} {1})", GetFullName(column), column.Condition);
 			}
 
 			// Apply grouping:
@@ -158,12 +132,15 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 		{
 			TableElement table = CurrentTable;
 
+			// Determine grouping function:
+			string function = this.GetFunction(array.Grouping);
+
 			for (int i = 0; i < array.ColumnCount; i++)
 			{
 				if (select.Length > 0)
 					select.Append(",\r\n   ");
 
-				select.Append(GetFullNameWithAlias(array, i));
+				select.Append(GetFullNameWithAlias(array, i, function));
 			}
 		}
 
@@ -173,6 +150,10 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 
 		public string BuildQuery(string additionalWhereConditions)
 		{
+			// Select all columns if none is selected:
+			if (this.select.Length == 0)
+				this.select.Append("*");
+
 			// Extend where condition with additional conditions:
 			if ((additionalWhereConditions != null) && (additionalWhereConditions.Replace("\r", "").Replace("\n","").Trim().Length > 0))
 			{
@@ -201,6 +182,31 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 		#endregion
 
 		#region Helper methods
+
+		private string GetFunction(GroupingFunction function)
+		{
+			switch (function)
+			{
+				case GroupingFunction.None:
+					return null;
+				case GroupingFunction.Group:
+					return null;
+				case GroupingFunction.AnyValue:
+					return "MIN";
+				case GroupingFunction.Count:
+					return "COUNT";
+				case GroupingFunction.Sum:
+					return "SUM";
+				case GroupingFunction.Average:
+					return "AVG";
+				case GroupingFunction.Min:
+					return "MIN";
+				case GroupingFunction.Max:
+					return "MAX";
+				default:
+					throw new NotSupportedException(String.Format("Grouping operation {0} not supported.", function));
+			}
+		}
 
 		private string GetFullNameOrAlias(TableElement item)
 		{
@@ -310,18 +316,37 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 			}
 		}
 
-		private string GetFullNameWithAlias(ColumnArrayElement item, int index)
+		private string GetFullNameWithAlias(ColumnArrayElement item, int index, string function)
 		{
-			return String.Format("{0}.{1} {2}", 
+			StringBuilder sb = new StringBuilder();
+
+			if (function != null)
+			{
+				sb.Append(function);
+				sb.Append("(");
+			}
+
+			sb.AppendFormat("{0}.{1}", 
 				GetFullNameOrAlias(item.Table), 
-				item.ColumnNames[index],
-				(String.IsNullOrEmpty(item.Alias) ? "" : this.GetAlias(item, index))
-			).Trim();
+				item.ColumnNames[index]);
+
+			if (function != null)
+				sb.Append(")");
+
+			if (!String.IsNullOrEmpty(item.Alias))
+				sb.AppendFormat(" {0}", this.GetAlias(item, index));
+
+			return sb.ToString();
 		}
 
 		private string GetAlias(ColumnArrayElement item, int index)
 		{
-			return String.Format("{0}_{1:00}", item.Alias, index+1);
+			return String.Format("{0}_{1}", item.Alias, this.ColumnNumber(item.ColumnNames[index]));
+		}
+
+		private string ColumnNumber(string columnName)
+		{
+			return columnNumberParser.Match(columnName).Groups[0].Value;
 		}
 
 		#endregion

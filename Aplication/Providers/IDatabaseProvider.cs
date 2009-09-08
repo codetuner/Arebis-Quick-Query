@@ -13,6 +13,8 @@ namespace Arebis.QuickQueryBuilder.Providers
 
 		string ConnectionName { get; }
 
+		void Open();
+
 		IList<DbSchema> GetSchemas();
 
 		IList<DbTable> GetTables(DbSchema schema);
