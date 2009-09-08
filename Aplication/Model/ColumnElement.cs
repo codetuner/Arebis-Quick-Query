@@ -45,7 +45,7 @@ namespace Arebis.QuickQueryBuilder.Model
 			set { this.SetProperty(ref this.alias, value, "Alias"); }
 		}
 
-		public string Condition
+		public virtual string Condition
 		{
 			get { return this.condition; }
 			set { this.SetProperty(ref this.condition, value, "Condition"); }
@@ -88,6 +88,9 @@ namespace Arebis.QuickQueryBuilder.Model
 				sb.Append(" ");
 				sb.Append(this.Condition);
 			}
+
+			if (this.Visible == false)
+				sb.Append(" (hidden)");
 
 			return sb.ToString();
 		}

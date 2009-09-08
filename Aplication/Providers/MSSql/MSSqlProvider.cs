@@ -10,7 +10,7 @@ using System.Runtime.Serialization;
 namespace Arebis.QuickQueryBuilder.Providers.MSSql
 {
 	[Serializable]
-	public class MSSqlProvider : IDatabaseProvider, IDeserializationCallback
+	public class MSSqlProvider : IDatabaseProvider
 	{
 		private static readonly Regex ColumnArrayParser = new Regex(@"^(.+?)(_)(\d+)$");
 
@@ -30,8 +30,6 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 		public MSSqlProvider(string connectionString)
 		{
             this.connectionString = connectionString;
-			this.connection = new SqlConnection(connectionString);
-			this.connection.Open();
 		}
 
 		#region IDatabaseProvider Members
@@ -43,7 +41,7 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 
 		public string ConnectionString
 		{
-			get { return this.connection.ConnectionString; }
+			get { return this.connectionString; }
 		}
 
 		public string ConnectionName
@@ -59,6 +57,12 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 						return null;
 				}
 			}
+		}
+
+		public void Open()
+		{
+			this.connection = new SqlConnection(this.connectionString);
+			this.connection.Open();
 		}
 
 		public IList<DbSchema> GetSchemas()
@@ -228,16 +232,6 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 		}
 
 		#endregion
-
-        #region IDeserializationCallback Members
-
-        void IDeserializationCallback.OnDeserialization(object sender)
-        {
-            this.connection = new SqlConnection(this.connectionString);
-            this.connection.Open();
-        }
-
-        #endregion
 
 		#region IDisposable Members
 

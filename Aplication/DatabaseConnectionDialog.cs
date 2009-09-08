@@ -35,10 +35,6 @@ namespace Arebis.QuickQueryBuilder
 			InitializeComponent();
 
 			OraProps.ConnectionStringBuilder.ConnectionString = String.Empty;
-
-			this.SqlConnectionPanel.Initialize(SqlProps);
-			this.OracleConnectionPanel.Initialize(OraProps);
-			this.ConnectorTabs_Selected(this.ConnectorTabs, null);
 		}
 
 		public IDatabaseProvider Result
@@ -53,11 +49,40 @@ namespace Arebis.QuickQueryBuilder
 			return dlg.Result;
 		}
 
+		public static IDatabaseProvider Show(IWin32Window owner, string connectionType, string connectionString)
+		{
+			DatabaseConnectionDialog dlg = new DatabaseConnectionDialog();
+
+			if (connectionType == "MSSql")
+			{
+				dlg.ConnectorTabs.SelectedTab = dlg.ConnectorTabs.TabPages[connectionType];
+				dlg.SqlProps.ConnectionStringBuilder.ConnectionString = connectionString;
+			}
+			else if (connectionType == "Oracle")
+			{
+				dlg.ConnectorTabs.SelectedTab = dlg.ConnectorTabs.TabPages[connectionType];
+				dlg.OraProps.ConnectionStringBuilder.ConnectionString = connectionString;
+			}
+
+			dlg.ShowDialog(owner);
+			return dlg.Result;
+		}
+
+		private void DatabaseConnectionDialog_Load(object sender, EventArgs e)
+		{
+			this.SqlConnectionPanel.Initialize(SqlProps);
+			this.SqlConnectionPanel.LoadProperties();
+			this.OracleConnectionPanel.Initialize(OraProps);
+			this.OracleConnectionPanel.LoadProperties();
+
+			this.ConnectorTabs_Selected(this, null);
+		}
+
 		private void ConnectorTabs_Selected(object sender, TabControlEventArgs e)
 		{
-			if ((string)this.ConnectorTabs.SelectedTab.Tag == "SQLSERVER")
+			if ((string)this.ConnectorTabs.SelectedTab.Tag == "MSSql")
 				this.CurrentProps = this.SqlProps;
-            else if ((string)this.ConnectorTabs.SelectedTab.Tag == "ORACLE")
+            else if ((string)this.ConnectorTabs.SelectedTab.Tag == "Oracle")
 				this.CurrentProps = this.OraProps;
 			else
 				throw new NotImplementedException("Connection provider not implemented.");
@@ -81,9 +106,9 @@ namespace Arebis.QuickQueryBuilder
 
 		private void OkBtn_Click(object sender, EventArgs e)
 		{
-            if ((string)this.ConnectorTabs.SelectedTab.Tag == "SQLSERVER")
+            if ((string)this.ConnectorTabs.SelectedTab.Tag == "MSSql")
 				this.result = new MSSqlProvider(this.CurrentProps.ToFullString());
-            else if ((string)this.ConnectorTabs.SelectedTab.Tag == "ORACLE")
+            else if ((string)this.ConnectorTabs.SelectedTab.Tag == "Oracle")
 				this.result = new OracleProvider(this.CurrentProps.ToFullString());
 			else
 				throw new NotImplementedException("Connection provider not implemented.");
@@ -94,6 +119,11 @@ namespace Arebis.QuickQueryBuilder
 		{
 			this.result = null;
 			this.Close();
+		}
+
+		private void advancedButton_Click(object sender, EventArgs e)
+		{
+			PropertiesBoxDialog.ShowDialog(this, "Connection properties", this.CurrentProps);
 		}
 	}
 }

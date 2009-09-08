@@ -16,8 +16,9 @@ namespace Arebis.QuickQueryBuilder.Windows
 		private Dictionary<object, TreeNode> treeNodeIndex = new Dictionary<object, TreeNode>();
 		private bool autoExpand = false;
 		private bool sorted = false;
-		private bool changed = false;
 		private EasyTreeAdapter adapter;
+
+		public event EventHandler Changed;
 
 		public EasyTreeView()
 		{
@@ -48,13 +49,6 @@ namespace Arebis.QuickQueryBuilder.Windows
 		{
 			get { return this.sorted; }
 			set { this.sorted = value; }
-		}
-
-		[System.ComponentModel.Browsable(false)]
-		public bool Changed
-		{
-			get { return this.changed; }
-			set { this.changed = value; }
 		}
 
 		[System.ComponentModel.Browsable(false)]
@@ -105,6 +99,12 @@ namespace Arebis.QuickQueryBuilder.Windows
 		public ICollection GetRoots()
 		{
 			return this.GetItemChildren(null);
+		}
+
+		protected void OnChanged(EventArgs e)
+		{
+			if (this.Changed != null)
+				this.Changed(this, e);
 		}
 
 		#endregion
@@ -166,7 +166,7 @@ namespace Arebis.QuickQueryBuilder.Windows
 			if (item is INotifyPropertyChanged)
 				((INotifyPropertyChanged)item).PropertyChanged += new PropertyChangedEventHandler(WhenNodePropertyChanged);
 
-			this.changed = true;
+			this.OnChanged(EventArgs.Empty);
 		}
 
 		private void WhenNodePropertyChanging(object sender, PropertyChangingEventArgs e)
@@ -178,7 +178,7 @@ namespace Arebis.QuickQueryBuilder.Windows
 					((INotifyPropertyChanged)sender)
 						.PropertyChanged += new PropertyChangedEventHandler(WhenNodePropertyChanged);
 
-				this.changed = true;
+				this.OnChanged(EventArgs.Empty);
 			}
 		}
 
@@ -187,12 +187,12 @@ namespace Arebis.QuickQueryBuilder.Windows
 			if (e.PropertyName == "Parent")
 			{
 				this.ModelNodes.Add(sender);
-				this.changed = true;
+				this.OnChanged(EventArgs.Empty);
 			}
 			else
 			{
 				this.SyncTreeNode(sender, this.GetTreeNodeForModelTreeNode(sender));
-				this.changed = true;
+				this.OnChanged(EventArgs.Empty);
 			}
 		}
 
@@ -211,7 +211,7 @@ namespace Arebis.QuickQueryBuilder.Windows
 				parentNode.Nodes.Remove(itemNode);
 			this.treeNodeIndex.Remove(item);
 
-			this.changed = true;
+			this.OnChanged(EventArgs.Empty);
 		}
 
 		#endregion

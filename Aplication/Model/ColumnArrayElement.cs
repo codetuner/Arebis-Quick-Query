@@ -35,9 +35,41 @@ namespace Arebis.QuickQueryBuilder.Model
 			get { return this.columnNames.Length; }
 		}
 
+		[System.ComponentModel.Browsable(false)]
+		public override string Condition
+		{
+			get { return base.Condition; }
+			set { /* Ignore, condition cannot be set */ }
+		}
+
 		public override string ToString()
 		{
-			return String.Format("{0}[{1}]", base.ToString(), this.columnNames.Length);
+			StringBuilder sb = new StringBuilder();
+
+			if (this.Grouping != GroupingFunction.None)
+			{
+				sb.Append(this.Grouping);
+				sb.Append(" of ");
+			}
+
+			sb.AppendFormat("{0}[{1}]", this.ColumnName, this.ColumnCount);
+
+			if (!String.IsNullOrEmpty(this.Alias))
+			{
+				sb.Append(" as ");
+				sb.AppendFormat("{0}[{1}]", this.Alias, this.ColumnCount);
+			}
+
+			if (!String.IsNullOrEmpty(this.Condition))
+			{
+				sb.Append(" ");
+				sb.Append(this.Condition);
+			}
+
+			if (this.Visible == false)
+				sb.Append(" (hidden)");
+
+			return sb.ToString();
 		}
 	}
 }
