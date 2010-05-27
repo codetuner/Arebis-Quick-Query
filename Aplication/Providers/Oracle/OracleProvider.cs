@@ -199,10 +199,10 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 			return result;
 		}
 
-		public System.Data.DataTable ExecuteQuery(string query)
+		public System.Data.DataTable ExecuteQuery(string query, int maxRows)
 		{
 			DataTable result = new DataTable();
-			OracleDataAdapter da = new OracleDataAdapter(String.Format("SELECT * FROM ({0}) WHERE ROWNUM <= 500", query), this.connection);
+			OracleDataAdapter da = new OracleDataAdapter(String.Format("SELECT * FROM ({0}) WHERE ROWNUM <= {1}", query, maxRows), this.connection);
 			da.ReturnProviderSpecificTypes = true;
 
 			da.Fill(result);

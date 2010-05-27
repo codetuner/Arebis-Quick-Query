@@ -233,8 +233,15 @@ namespace Arebis.QuickQueryBuilder
 			if (e.KeyCode == Keys.Delete)
 			{
 				if (selection == null) return;
-				if (selection is QueryModel) return;
-				QueryTree.ModelNodes.Remove(selection);
+                
+                QueryTree.ModelNodes.Remove(selection);
+
+                if (selection is QueryModel)
+                {
+                    // Create new initial node:
+                    this.document = new QueryModel();
+                    this.QueryTree.ModelNodes.Add(this.document);
+                }
 			}
 		}
 
@@ -260,7 +267,12 @@ namespace Arebis.QuickQueryBuilder
 				e.Result = e.Item.GetType().Name;
 		}
 
-		private void WhereText_TextChanged(object sender, EventArgs e)
+        private void QueryExtText_TextChanged(object sender, EventArgs e)
+        {
+            this.changed = true;
+        }
+        
+        private void WhereText_TextChanged(object sender, EventArgs e)
 		{
 			this.changed = true;
 		}
@@ -498,7 +510,7 @@ namespace Arebis.QuickQueryBuilder
 
 		private void queryNavigator_Done(object sender, EventArgs e)
 		{
-			string fullquery = this.builder.BuildQuery(this.WhereText.Text);
+			string fullquery = this.builder.BuildQuery(this.WhereText.Text, this.QueryExtText.Text);
 			this.QueryText.Text = fullquery;
 			ExecutionTabControl.SelectedTab = SelectTabPage;
 
@@ -506,17 +518,23 @@ namespace Arebis.QuickQueryBuilder
 			{
 				using (new WaitCursor(this))
 				{
-					DataTable dt = this.provider.ExecuteQuery(fullquery);
+                    // Execute query and fill DataGridView:
+					DataTable dt = this.provider.ExecuteQuery(fullquery, 500);
 					ResultView.DataSource = null;
 					ResultView.DataSource = dt;
 					ExecutionTabControl.SelectedTab = ResultTabPage;
-				}
+
+                    // Autosize columns:
+                    ResultView.AutoResizeColumns();
+                    foreach (DataGridViewColumn col in ResultView.Columns)
+                        if (col.Width > 400) col.Width = 400;
+                }
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show(this, ex.Message, this.formTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
-		}
+        }
 
 		#endregion
 
@@ -544,6 +562,7 @@ namespace Arebis.QuickQueryBuilder
 			this.ColumnList.Items.Clear();
 			this.QueryText.Text = "";
 			this.WhereText.Text = "";
+            this.QueryExtText.Text = "";
 			this.ResultView.DataSource = null;
 
 			// Clear document:
@@ -627,6 +646,7 @@ namespace Arebis.QuickQueryBuilder
 				foreach (object item in session.QueryTree)
 					this.QueryTree.ModelNodes.Add(item);
 				this.WhereText.Text = session.WhereText;
+                this.QueryExtText.Text = session.QueryExtText;
 			}
 
 			this.changed = false;
@@ -644,6 +664,7 @@ namespace Arebis.QuickQueryBuilder
 			{
 				Session session = new Session(this.provider, this.QueryTree.ModelNodes);
 				session.WhereText = this.WhereText.Text;
+                session.QueryExtText = this.QueryExtText.Text;
 				formatter.Serialize(str, session);
 				str.Close();
 			}

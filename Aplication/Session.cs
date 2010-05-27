@@ -39,6 +39,12 @@ namespace Arebis.QuickQueryBuilder
 			set { whereText = value; }
 		}
 
+        private string queryExtText;
 
+        public string QueryExtText
+        {
+            get { return this.queryExtText; }
+            set { this.queryExtText = value; }
+        }
 	}
 }

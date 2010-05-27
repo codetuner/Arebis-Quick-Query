@@ -149,7 +149,7 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 		{
 		}
 
-		public string BuildQuery(string additionalWhereConditions)
+        public string BuildQuery(string additionalWhereConditions, string additionalSqlClause)
 		{
 			// Select all columns if none is selected:
 			if (this.select.Length == 0)
@@ -175,6 +175,12 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 			{
 				sql += "\r\nGROUP BY " + groupBy.ToString();
 			}
+
+            // Add additional SQL clause:
+            if (additionalSqlClause != null)
+            {
+                sql += "\r\n" + additionalSqlClause;
+            }
 
 			// Return SQL statement:
 			return sql;
