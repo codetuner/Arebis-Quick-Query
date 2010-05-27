@@ -23,7 +23,7 @@ namespace Arebis.QuickQueryBuilder.Providers
 
 		IList<DbRelation> GetRelations(DbTable table);
 
-		DataTable ExecuteQuery(string query);
+        DataTable ExecuteQuery(string query, int maxRows);
 
 		IQueryBuilder CreateQueryBuilder();
 	}

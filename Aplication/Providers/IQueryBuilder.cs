@@ -22,6 +22,6 @@ namespace Arebis.QuickQueryBuilder.Providers
 		void BeginColumnArray(ColumnArrayElement array);
 		void EndColumnArray(ColumnArrayElement array);
 
-		string BuildQuery(string additionalWhereConditions);
+		string BuildQuery(string additionalWhereConditions, string additionalSqlClause);
 	}
 }

@@ -8,7 +8,7 @@ namespace Arebis.QuickQueryBuilder.Model
 	[Serializable]
 	public class QueryModel : ModelBase, ITreeItem
 	{
-		private bool distinct;
+        private bool distinct;
 
 		[System.ComponentModel.DefaultValue(false)]
 		public bool Distinct
@@ -16,8 +16,8 @@ namespace Arebis.QuickQueryBuilder.Model
 			get { return this.distinct; }
 			set { this.SetProperty(ref this.distinct, value, "Distinct"); }
 		}
-
-		public override string ToString()
+        
+        public override string ToString()
 		{
 			if (this.distinct)
 				return "SELECT DISTINCT";

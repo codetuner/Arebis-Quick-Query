@@ -85,6 +85,11 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 		{
 			List<DbTable> result = new List<DbTable>();
 
+            using (SqlCommand cmd = new SqlCommand(String.Format("USE \"{0}\"", schema.Name), connection))
+            {
+                cmd.ExecuteNonQuery();
+            }
+
 			using (SqlCommand cmd = new SqlCommand(MSSqlQueries.RetrieveTables, connection))
 			{
 				cmd.Parameters.Add(new SqlParameter("@Schema", schema.Name));
@@ -105,10 +110,15 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 			List<DbColumn> result = new List<DbColumn>();
 			Dictionary<string, DbColumnArray> columnArrays = new Dictionary<string, DbColumnArray>();
 
-			using (SqlCommand cmd = new SqlCommand(MSSqlQueries.RetrieveColumns, connection))
+            using (SqlCommand cmd = new SqlCommand(String.Format("USE \"{0}\"", table.Schema.Name), connection))
+            {
+                cmd.ExecuteNonQuery();
+            }
+            
+            using (SqlCommand cmd = new SqlCommand(MSSqlQueries.RetrieveColumns, connection))
 			{
-				cmd.Parameters.Add(new SqlParameter("@Schema", table.Schema.Name));
-				cmd.Parameters.Add(new SqlParameter("@Table", table.Name));
+				cmd.Parameters.Add(new SqlParameter("@Schema", table.Name.Split(new char[] {'.'}, 2)[0]));
+				cmd.Parameters.Add(new SqlParameter("@Table", table.Name.Split(new char[] {'.'}, 2)[1]));
 				using (SqlDataReader reader = cmd.ExecuteReader())
 				{
 					while (reader.Read())
@@ -161,28 +171,33 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 			Hashtable handledrelations;
 			List<DbRelation> result = new List<DbRelation>();
 
-			// 'Straight' relations:
+            using (SqlCommand cmd = new SqlCommand(String.Format("USE \"{0}\"", table.Schema.Name), connection))
+            {
+                cmd.ExecuteNonQuery();
+            }
+            
+            // 'Straight' relations:
 			using (SqlCommand cmd = new SqlCommand(MSSqlQueries.RetrieveRelations, connection))
 			{
 				handledrelations = new Hashtable();
 				DbRelation rel = null;
 
-				cmd.Parameters.Add(new SqlParameter("@Schema", table.Schema.Name));
-				cmd.Parameters.Add(new SqlParameter("@Table", table.Name));
-				using (SqlDataReader reader = cmd.ExecuteReader())
+                cmd.Parameters.Add(new SqlParameter("@Schema", table.Name.Split(new char[] { '.' }, 2)[0]));
+                cmd.Parameters.Add(new SqlParameter("@Table", table.Name.Split(new char[] { '.' }, 2)[1]));
+                using (SqlDataReader reader = cmd.ExecuteReader())
 				{
 					while (reader.Read())
 					{
 						string relname = reader.GetString(0);
 						if (!handledrelations.Contains(reader.GetString(0)))
 						{
-							rel = new DbRelation(relname, table, new DbTable(new DbSchema(reader.GetString(5)), reader.GetString(6), false), "One-To-Many", false);
+							rel = new DbRelation(relname, table, new DbTable(new DbSchema(reader.GetString(3)), reader.GetString(4), false), "One-To-Many", false);
 							handledrelations.Add(relname, rel);
 							result.Add(rel);
 						}
 
-						rel.FromColumns.Add(reader.GetString(15));
-						rel.ToColumns.Add(reader.GetString(7));
+						rel.FromColumns.Add(reader.GetString(11));
+						rel.ToColumns.Add(reader.GetString(5));
 					}
 				}
 			}
@@ -193,8 +208,8 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 				handledrelations = new Hashtable();
 				DbRelation rel = null;
 
-				cmd.Parameters.Add(new SqlParameter("@Schema", table.Schema.Name));
-				cmd.Parameters.Add(new SqlParameter("@Table", table.Name));
+                cmd.Parameters.Add(new SqlParameter("@Schema", table.Name.Split(new char[] { '.' }, 2)[0]));
+                cmd.Parameters.Add(new SqlParameter("@Table", table.Name.Split(new char[] { '.' }, 2)[1]));
 				using (SqlDataReader reader = cmd.ExecuteReader())
 				{
 					while (reader.Read())
@@ -202,13 +217,13 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 						string relname = reader.GetString(0);
 						if (!handledrelations.Contains(reader.GetString(0)))
 						{
-							rel = new DbRelation(relname, table, new DbTable(new DbSchema(reader.GetString(13)), reader.GetString(14), false), "One-To-Many", true);
+							rel = new DbRelation(relname, table, new DbTable(new DbSchema(reader.GetString(9)), reader.GetString(10), false), "One-To-Many", true);
 							handledrelations.Add(relname, rel);
 							result.Add(rel);
 						}
 
-						rel.FromColumns.Add(reader.GetString(7));
-						rel.ToColumns.Add(reader.GetString(15));
+						rel.FromColumns.Add(reader.GetString(5));
+						rel.ToColumns.Add(reader.GetString(11));
 					}
 				}
 			}
@@ -216,10 +231,10 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 			return result;
 		}
 
-		public System.Data.DataTable ExecuteQuery(string query)
+		public System.Data.DataTable ExecuteQuery(string query, int maxRows)
 		{
 			DataTable result = new DataTable();
-			SqlDataAdapter da = new SqlDataAdapter(String.Format("SET ROWCOUNT 500\r\n{0}", query), this.connection);
+			SqlDataAdapter da = new SqlDataAdapter(String.Format("SET ROWCOUNT {1}\r\n{0}", query, maxRows), this.connection);
 
 			da.Fill(result);
 
