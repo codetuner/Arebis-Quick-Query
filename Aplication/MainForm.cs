@@ -14,6 +14,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using System.Diagnostics;
 using System.Reflection;
+using System.Configuration;
 
 namespace Arebis.QuickQueryBuilder
 {
@@ -361,6 +362,9 @@ namespace Arebis.QuickQueryBuilder
 						lvi.Group = SchemasList.Groups["Schemas"];
 					}
 					this.SchemasList.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+
+                    // Refresh window state and title:
+                    this.UpdateWindowState();
 				}
 			}
 		}
@@ -542,7 +546,14 @@ namespace Arebis.QuickQueryBuilder
 
 		private bool CloseSession(bool interactive)
 		{
-			if ((interactive) && (this.changed))
+            if ((this.changed) 
+                && (this.sessionFileName != null) 
+                && (Convert.ToBoolean(ConfigurationManager.AppSettings["skipSaveOnReadOnly"] ?? "False")) 
+                && (new FileInfo(this.sessionFileName).IsReadOnly))
+            { 
+                // Do not attempt to overwrite existing read-only files.
+            }
+			else if ((interactive) && (this.changed))
 			{
 				DialogResult saveFirst = MessageBox.Show(this, "Save the existing session first ?", this.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
 				if (saveFirst == DialogResult.Yes)
