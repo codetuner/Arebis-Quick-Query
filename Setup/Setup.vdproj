@@ -15,19 +15,19 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_911028E27F0A0B1616CDFC52A626721D"
-        "OwnerKey" = "8:_E0473A626BB7A44896DECF4068560853"
+        "MsmKey" = "8:_156C1B6A13A6EAAE783395A4FDE4111A"
+        "OwnerKey" = "8:_CFC0EF42B3FE32055F79E2957D475EFE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_911028E27F0A0B1616CDFC52A626721D"
+        "MsmKey" = "8:_156C1B6A13A6EAAE783395A4FDE4111A"
         "OwnerKey" = "8:_F254E88F21A3414181BAC6B0B276E838"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_E0473A626BB7A44896DECF4068560853"
+        "MsmKey" = "8:_CFC0EF42B3FE32055F79E2957D475EFE"
         "OwnerKey" = "8:_F254E88F21A3414181BAC6B0B276E838"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -46,13 +46,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E0473A626BB7A44896DECF4068560853"
+        "OwnerKey" = "8:_CFC0EF42B3FE32055F79E2957D475EFE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_911028E27F0A0B1616CDFC52A626721D"
+        "OwnerKey" = "8:_156C1B6A13A6EAAE783395A4FDE4111A"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -119,10 +119,10 @@
             "ComponentsUrl" = "8:"
                 "Items"
                 {
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Net.Framework.3.5"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.0"
                     {
-                    "Name" = "8:.NET Framework 3.5"
-                    "ProductCode" = "8:Microsoft.Net.Framework.3.5"
+                    "Name" = "8:Microsoft .NET Framework 4 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.0"
                     }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.Windows.Installer.3.1"
                     {
@@ -152,7 +152,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "Version" = "8:3.5.21022"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.0"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=76617"
                 }
@@ -160,14 +160,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_911028E27F0A0B1616CDFC52A626721D"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_156C1B6A13A6EAAE783395A4FDE4111A"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Data.ConnectionUI, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Data.ConnectionUI, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_911028E27F0A0B1616CDFC52A626721D"
+                    "_156C1B6A13A6EAAE783395A4FDE4111A"
                     {
                     "Name" = "8:Microsoft.Data.ConnectionUI.dll"
                     "Attributes" = "3:512"
@@ -191,14 +191,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E0473A626BB7A44896DECF4068560853"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_CFC0EF42B3FE32055F79E2957D475EFE"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.Data.ConnectionUI.Dialog, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Microsoft.Data.ConnectionUI.Dialog, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_E0473A626BB7A44896DECF4068560853"
+                    "_CFC0EF42B3FE32055F79E2957D475EFE"
                     {
                     "Name" = "8:Microsoft.Data.ConnectionUI.Dialog.dll"
                     "Attributes" = "3:512"
@@ -312,14 +312,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Arebis Quick Query Editor"
-        "ProductCode" = "8:{025FBC2D-CE3B-4CCD-9166-7C5750F7D476}"
-        "PackageCode" = "8:{7D66BBDE-39CD-4B3F-98F6-13DAA5205759}"
+        "ProductCode" = "8:{35A7C811-17C4-4623-8A45-C9FE1E6F9A5A}"
+        "PackageCode" = "8:{5D1E7013-369D-4FFB-BC3A-13F4A8A8B2ED}"
         "UpgradeCode" = "8:{3FE05B59-E21C-46F6-ACD7-90F4B4E21152}"
+        "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.2.0"
+        "ProductVersion" = "8:1.3.1"
         "Manufacturer" = "8:Arebis"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://q2.codeplex.com/"

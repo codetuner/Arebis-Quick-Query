@@ -10,6 +10,7 @@ using Microsoft.Data.ConnectionUI;
 using Arebis.QuickQueryBuilder.Providers;
 using Arebis.QuickQueryBuilder.Providers.MSSql;
 using Arebis.QuickQueryBuilder.Providers.Oracle;
+using Arebis.QuickQueryBuilder.Properties;
 
 namespace Arebis.QuickQueryBuilder
 {
@@ -70,6 +71,13 @@ namespace Arebis.QuickQueryBuilder
 
 		private void DatabaseConnectionDialog_Load(object sender, EventArgs e)
 		{
+            if (Settings.Default.DatabaseConnectionDialog_Height > 100)
+                this.Height = Settings.Default.DatabaseConnectionDialog_Height;
+            if (Settings.Default.DatabaseConnectionDialog_Width > 100)
+                this.Width = Settings.Default.DatabaseConnectionDialog_Width;
+
+            Settings.Default.DatabaseConnectionDialog_Width = this.Width;
+
 			this.SqlConnectionPanel.Initialize(SqlProps);
 			this.SqlConnectionPanel.LoadProperties();
 			this.OracleConnectionPanel.Initialize(OraProps);
@@ -125,5 +133,11 @@ namespace Arebis.QuickQueryBuilder
 		{
 			PropertiesBoxDialog.ShowDialog(this, "Connection properties", this.CurrentProps);
 		}
+
+        private void DatabaseConnectionDialog_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Settings.Default.DatabaseConnectionDialog_Height = this.Height;
+            Settings.Default.DatabaseConnectionDialog_Width = this.Width;
+        }
 	}
 }
