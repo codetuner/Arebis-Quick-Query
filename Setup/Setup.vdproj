@@ -7,10 +7,10 @@
 "LanguageId" = "3:1033"
 "CodePage" = "3:1252"
 "UILanguageId" = "3:1033"
-"SccProjectName" = "8:"
-"SccLocalPath" = "8:"
-"SccAuxPath" = "8:"
-"SccProvider" = "8:"
+"SccProjectName" = "8:SAK"
+"SccLocalPath" = "8:SAK"
+"SccAuxPath" = "8:SAK"
+"SccProvider" = "8:SAK"
     "Hierarchy"
     {
         "Entry"
@@ -876,7 +876,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F254E88F21A3414181BAC6B0B276E838"
             {
-            "SourcePath" = "8:..\\Aplication\\obj\\Release\\Q2.exe"
+            "SourcePath" = "8:..\\Aplication\\obj\\Debug\\Q2.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_DC5F0C76E3C14CD5BDEE8313516E71F6"
