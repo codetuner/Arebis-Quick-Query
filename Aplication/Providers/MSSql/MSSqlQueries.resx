@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="RetrieveColumns" xml:space="preserve">
     <value>SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, IS_NULLABLE FROM [INFORMATION_SCHEMA].[COLUMNS]
@@ -180,7 +180,7 @@ WHERE KCU1.ORDINAL_POSITION = KCU2.ORDINAL_POSITION
   AND KCU1.TABLE_NAME = @Table</value>
   </data>
   <data name="RetrieveSchemas" xml:space="preserve">
-    <value>SELECT DISTINCT NAME FROM [MASTER].[SYS].[DATABASES] ORDER BY 1</value>
+    <value>SELECT DISTINCT NAME FROM [MASTER].[SYS].[DATABASES] WHERE HAS_DBACCESS(NAME)=1 ORDER BY 1</value>
   </data>
   <data name="RetrieveTables" xml:space="preserve">
     <value>SELECT TABLE_SCHEMA + '.' + TABLE_NAME, TABLE_TYPE FROM [INFORMATION_SCHEMA].[TABLES] ORDER BY 1</value>
