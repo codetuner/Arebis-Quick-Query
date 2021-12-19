@@ -8,17 +8,20 @@ History:
 
 1.4.0.0
 
+1.5.0.0 2021-12-19 Fixed issues with binary columns;
+                   Add USE command in SqlServer when single DB is accessed;
+                   Allow session file as command line argument;
+                   MaxRows customizable.
 
 References:
 -----------
 
-The following DLL's are referenced ans must be made available:
+The following DLL's are referenced and must be made available:
 
 - Microsoft.Data.ConnectionUI.dll
 - Microsoft.Data.ConnectionUI.Dialog.dll
   These can be found in the IDE folder of VS.NET,
-  for instance: C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE
-                C:\Program Files\Microsoft Visual Studio 9.0\Common7\IDE\
+  for instance: C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE
 
 
 Credits:

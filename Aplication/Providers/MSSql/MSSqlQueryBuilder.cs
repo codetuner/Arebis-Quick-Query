@@ -17,6 +17,7 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 		private String selectOptions = String.Empty;
 		private List<string> uniqueTableNames = new List<string>();
 		private List<string> uniqueColumnNames = new List<string>();
+		private List<string> uniqueSchemaNames = new List<string>();
 
 		private Stack<TableElement> tables = new Stack<TableElement>();
 
@@ -182,6 +183,12 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
                 sql += "\r\n" + additionalSqlClause;
             }
 
+			// Replace schema name prefix by USE command if only one schema:
+			if (uniqueSchemaNames.Count == 1)
+			{
+				sql = "USE ["+uniqueSchemaNames[0]+"];\r\n\r\n" + sql.Replace("[" + uniqueSchemaNames[0] + "].", "");
+			}
+
 			// Return SQL statement:
 			return sql;
 		}
@@ -251,6 +258,9 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 					item.Alias = tableName;
 			}
 
+			// Store unique schemaNames:
+			if (!this.uniqueSchemaNames.Contains(item.SchemaName)) this.uniqueSchemaNames.Add(item.SchemaName);
+
 			// Return name with unique alias:
 			if (String.IsNullOrEmpty(item.Alias))
 			{
@@ -273,7 +283,7 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 
 		private string GetFullName(ColumnElement item)
 		{
-			return String.Format("{0}.{1}", GetFullNameOrAlias(item.Table), item.ColumnName);
+			return String.Format("{0}.[{1}]", GetFullNameOrAlias(item.Table), item.ColumnName);
 		}
 
 		private string GetFullNameOrAlias(ColumnElement item)

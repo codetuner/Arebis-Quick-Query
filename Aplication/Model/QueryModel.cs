@@ -10,14 +10,23 @@ namespace Arebis.QuickQueryBuilder.Model
 	{
         private bool distinct;
 
+		private int maxRows = 500;
+
 		[System.ComponentModel.DefaultValue(false)]
 		public bool Distinct
 		{
 			get { return this.distinct; }
-			set { this.SetProperty(ref this.distinct, value, "Distinct"); }
+			set { this.SetProperty(ref this.distinct, value, nameof(Distinct)); }
 		}
-        
-        public override string ToString()
+
+		[System.ComponentModel.DefaultValue(500)]
+		public int MaxRows
+		{
+			get { return this.maxRows; }
+			set { this.SetProperty(ref this.maxRows, value, nameof(MaxRows)); }
+		}
+		
+		public override string ToString()
 		{
 			if (this.distinct)
 				return "SELECT DISTINCT";

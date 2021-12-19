@@ -72,15 +72,20 @@ namespace Arebis.QuickQueryBuilder
 			}
 			else if (args[1].Equals("MSSql", StringComparison.CurrentCultureIgnoreCase))
 			{
-                if (args.Length >= 6)
+				if (args.Length >= 6)
 					this.provider = new MSSqlProvider(args[2], args[3], args[4], args[5]);
 				else if (args.Length >= 4)
 					this.provider = new MSSqlProvider(args[2], args[3]);
-                else if (args.Length >= 3)
-                    this.provider = new MSSqlProvider(args[2]);
-                else
+				else if (args.Length >= 3)
+					this.provider = new MSSqlProvider(args[2]);
+				else
 					this.provider = null;
 				this.NewSession();
+			}
+			else
+			{
+				this.sessionFileName = args[1];
+				this.OpenSession();
 			}
 		}
 
@@ -522,8 +527,15 @@ namespace Arebis.QuickQueryBuilder
 			{
 				using (new WaitCursor(this))
 				{
+					// Set maxRows:
+					var maxRows = 500;
+					foreach(var item in this.QueryTree.GetRoots())
+						if (item is QueryModel qmItem)
+							maxRows = qmItem.MaxRows;
+
                     // Execute query and fill DataGridView:
-					DataTable dt = this.provider.ExecuteQuery(fullquery, 500);
+					DataTable dt = this.provider.ExecuteQuery(fullquery, maxRows);
+					Transform(dt);
 					ResultView.DataSource = null;
 					ResultView.DataSource = dt;
 					ExecutionTabControl.SelectedTab = ResultTabPage;
@@ -539,6 +551,45 @@ namespace Arebis.QuickQueryBuilder
 				MessageBox.Show(this, ex.Message, this.formTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 			}
         }
+
+		private void Transform(DataTable dt)
+		{
+			for (int colIndex = 0; colIndex < dt.Columns.Count; colIndex++)
+			{
+				var col = dt.Columns[colIndex];
+
+				// Replace all byte[] values by String values:
+				if (col.DataType == typeof(byte[]))
+				{
+					var newColName = col.ColumnName;
+					col.ColumnName = col.ColumnName + "´";
+					var newCol = dt.Columns.Add(newColName, typeof(String));
+
+					foreach (DataRow row in dt.Rows)
+					{
+						if (row[col] is System.DBNull)
+						{
+							row[newCol] = null;
+						}
+						else
+						{
+							var value = (byte[])row[col];
+							if (value.Length > 24)
+							{
+								row[newCol] = "0x" + BitConverter.ToString(value, 0, 20).Replace("-", "") + "...";
+							}
+							else
+							{
+								row[newCol] = "0x" + BitConverter.ToString(value).Replace("-", "");
+							}
+						}
+					}
+
+					dt.Columns.RemoveAt(colIndex);
+					colIndex--;
+				}
+			}
+		}
 
 		#endregion
 
