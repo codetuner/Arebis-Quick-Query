@@ -19,7 +19,7 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class MSSqlQueries {
@@ -82,15 +82,14 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT 
-        ///   KCU1.TABLE_SCHEMA + &apos;.&apos; + KCU1.TABLE_NAME + &apos; (via &apos; + KCU1.CONSTRAINT_SCHEMA + &apos;.&apos; + KCU1.CONSTRAINT_NAME + &apos;)&apos;,
-        ///   KCU1.CONSTRAINT_CATALOG AS &apos;CONSTRAINT_CATALOG&apos;,
-        ///   KCU1.CONSTRAINT_SCHEMA + &apos;.&apos; + KCU1.CONSTRAINT_NAME AS &apos;CONSTRAINT_NAME&apos;,
-        ///   KCU1.TABLE_CATALOG AS &apos;TABLE_CATALOG&apos;,
-        ///   KCU1.TABLE_SCHEMA + &apos;.&apos; + KCU1.TABLE_NAME AS &apos;TABLE_NAME&apos;,
-        ///   KCU1.COLUMN_NAME AS &apos;COLUMN_NAME&apos;,
-        ///   KCU1.ORDINAL_POSITION AS &apos;ORDINAL_POSITION&apos;,
-        ///   KCU2.CONSTRAINT_CATALOG AS &apos;UNIQUE_CONSTRAINT_CATALOG&apos;,
-        /// [rest of string was truncated]&quot;;.
+        ///   CONCAT(OBJECT_SCHEMA_NAME(fk.parent_object_id), &apos;.&apos;, OBJECT_NAME(fk.parent_object_id), &apos; via (&apos;, OBJECT_SCHEMA_NAME(fk.parent_object_id), &apos;.&apos;, fk.name, &apos;)&apos;) AS RELATION_NAME,
+        ///   DB_NAME() AS CONSTRAINT_CATALOG,
+        ///   OBJECT_SCHEMA_NAME(fk.object_id) + &apos;.&apos; + fk.name AS CONSTRAINT_NAME,
+        ///   DB_NAME() AS TABLE_CATALOG,
+        ///   OBJECT_SCHEMA_NAME(fk.parent_object_id) + &apos;.&apos; + OBJECT_NAME(fk.parent_object_id) AS TABLE_NAME,
+        ///   fkcl.name AS COLUMN_NAME,
+        ///   fkc.constraint_column_id AS ORDINAL_POSITION,
+        ///   [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RetrieveRelations {
             get {
@@ -100,15 +99,13 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql {
         
         /// <summary>
         ///   Looks up a localized string similar to SELECT 
-        ///   KCU2.TABLE_SCHEMA + &apos;.&apos; + KCU2.TABLE_NAME + &apos; (via &apos; + KCU1.CONSTRAINT_SCHEMA + &apos;.&apos; + KCU1.CONSTRAINT_NAME + &apos;)&apos;,
-        ///   KCU1.CONSTRAINT_CATALOG AS &apos;CONSTRAINT_CATALOG&apos;,
-        ///   KCU1.CONSTRAINT_SCHEMA + &apos;.&apos; + KCU1.CONSTRAINT_NAME AS &apos;CONSTRAINT_NAME&apos;,
-        ///   KCU1.TABLE_CATALOG AS &apos;TABLE_CATALOG&apos;,
-        ///   KCU1.TABLE_SCHEMA + &apos;.&apos; + KCU1.TABLE_NAME AS &apos;TABLE_NAME&apos;,
-        ///   KCU1.COLUMN_NAME AS &apos;COLUMN_NAME&apos;,
-        ///   KCU1.ORDINAL_POSITION AS &apos;ORDINAL_POSITION&apos;,
-        ///   KCU2.CONSTRAINT_CATALOG AS &apos;UNIQUE_CONSTRAINT_CATALOG&apos;,
-        /// [rest of string was truncated]&quot;;.
+        ///   CONCAT(OBJECT_SCHEMA_NAME(fk.referenced_object_id), &apos;.&apos;, OBJECT_NAME(fk.referenced_object_id), &apos; via (&apos;, OBJECT_SCHEMA_NAME(fk.parent_object_id), &apos;.&apos;, fk.name, &apos;)&apos;) AS RELATION_NAME,
+        ///   DB_NAME() AS CONSTRAINT_CATALOG,
+        ///   OBJECT_SCHEMA_NAME(fk.object_id) + &apos;.&apos; + fk.name AS CONSTRAINT_NAME,
+        ///   DB_NAME() AS TABLE_CATALOG,
+        ///   OBJECT_SCHEMA_NAME(fk.parent_object_id) + &apos;.&apos; + OBJECT_NAME(fk.parent_object_id) AS TABLE_NAME,
+        ///   fkcl.name AS COLUMN_NAME,
+        ///   fkc.constraint_column_id AS ORDINAL_POSIT [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RetrieveReverseRelations {
             get {

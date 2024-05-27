@@ -182,8 +182,7 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 				handledrelations = new Hashtable();
 				DbRelation rel = null;
 
-                cmd.Parameters.Add(new SqlParameter("@Schema", table.Name.Split(new char[] { '.' }, 2)[0]));
-                cmd.Parameters.Add(new SqlParameter("@Table", table.Name.Split(new char[] { '.' }, 2)[1]));
+                cmd.Parameters.Add(new SqlParameter("@Schema_Table", table.Name));
                 using (SqlDataReader reader = cmd.ExecuteReader())
 				{
 					while (reader.Read())
@@ -196,7 +195,7 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 							result.Add(rel);
 						}
 
-						rel.FromColumns.Add(reader.GetString(11));
+						rel.FromColumns.Add(reader.GetString(9));
 						rel.ToColumns.Add(reader.GetString(5));
 					}
 				}
@@ -208,8 +207,7 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 				handledrelations = new Hashtable();
 				DbRelation rel = null;
 
-                cmd.Parameters.Add(new SqlParameter("@Schema", table.Name.Split(new char[] { '.' }, 2)[0]));
-                cmd.Parameters.Add(new SqlParameter("@Table", table.Name.Split(new char[] { '.' }, 2)[1]));
+                cmd.Parameters.Add(new SqlParameter("@Schema_Table", table.Name));
 				using (SqlDataReader reader = cmd.ExecuteReader())
 				{
 					while (reader.Read())
@@ -217,13 +215,13 @@ namespace Arebis.QuickQueryBuilder.Providers.MSSql
 						string relname = reader.GetString(0);
 						if (!handledrelations.Contains(reader.GetString(0)))
 						{
-							rel = new DbRelation(relname, table, new DbTable(new DbSchema(reader.GetString(9)), reader.GetString(10), false), "One-To-Many", true);
+							rel = new DbRelation(relname, table, new DbTable(new DbSchema(reader.GetString(7)), reader.GetString(8), false), "One-To-Many", true);
 							handledrelations.Add(relname, rel);
 							result.Add(rel);
 						}
 
 						rel.FromColumns.Add(reader.GetString(5));
-						rel.ToColumns.Add(reader.GetString(11));
+						rel.ToColumns.Add(reader.GetString(9));
 					}
 				}
 			}

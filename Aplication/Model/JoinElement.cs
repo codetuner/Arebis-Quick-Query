@@ -12,6 +12,7 @@ namespace Arebis.QuickQueryBuilder.Model
 		private TableElement leftTable;
 		private DbRelation relation;
 		private JoinType joinType = JoinType.InnerJoin;
+		private string extraCondition;
 
 		public JoinElement(TableElement leftTable, DbRelation relation)
 			: base(leftTable.Query, relation.ToTable)
@@ -37,6 +38,17 @@ namespace Arebis.QuickQueryBuilder.Model
 		{
 			get { return this.joinType; }
 			set { this.SetProperty(ref this.joinType, value, "JoinType"); }
+		}
+
+		/// <summary>
+		/// Extra conditions that are And'ed with the regular join condition
+		/// </summary>
+		[System.ComponentModel.DisplayName("Extra condition(s)")]
+		[System.ComponentModel.Description("Extra SQL condition(s) And'ed with the regular join condition.")]
+		public string ExtraCondition
+		{
+			get { return this.extraCondition; }
+			set { this.extraCondition = value; }
 		}
 
 		public override string ToString()

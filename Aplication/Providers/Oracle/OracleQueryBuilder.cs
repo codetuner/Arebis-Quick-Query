@@ -85,8 +85,13 @@ namespace Arebis.QuickQueryBuilder.Providers.Oracle
 				from.Append(join.Relation.ToColumns[i]);
 				sep = " AND ";
 			}
+            if (join.ExtraCondition != null)
+            {
+                from.Append(sep);
+                from.Append(join.ExtraCondition);
+            }
 
-			from.Append(")");
+            from.Append(")");
 		}
 
 		public void EndJoin(JoinElement join)
